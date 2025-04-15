@@ -1,6 +1,7 @@
 extends Node2D
 
 @onready var player_hand: Node2D = $"../PlayerHand"
+@onready var input_manager: Node2D = $"../InputManager"
 
 const COLLISION_MASK_CARD = 1
 const COLLISION_MASK_CARD_SLOT = 2
@@ -11,24 +12,28 @@ var is_hovering_on_card
 
 func _ready() -> void:
 	screen_size = get_viewport_rect().size
+	input_manager.left_mouse_button_released.connect(on_left_click_released)
 
 func _process(delta: float) -> void:
 	if card_being_dragged:
 		var mouse_pos = get_global_mouse_position()
 		card_being_dragged.position = Vector2(clamp(mouse_pos.x, 0, screen_size.x), clamp(mouse_pos.y, 0, screen_size.y))
 
+func on_left_click_released():
+	if card_being_dragged:
+		finish_drag()
 
-func _input(event):
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if event.pressed:
-			# raycast checking
-			var card = raycast_check_for_card()
-			if card:
-				start_drag(card)
-		else:
-			if card_being_dragged:
-				finish_drag()
-				
+#func _input(event):
+	#if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		#if event.pressed:
+			## raycast checking
+			#var card = raycast_check_for_card()
+			#if card:
+				#start_drag(card)
+		#else:
+			#if card_being_dragged:
+				#finish_drag()
+				#
 func raycast_check_for_card_slot():
 	var space_state = get_viewport().world_2d.direct_space_state
 	var parameters = PhysicsPointQueryParameters2D.new()
@@ -102,6 +107,6 @@ func finish_drag():
 		card_being_dragged.get_node("Area2D/CollisionShape2D").disabled = true
 		card_slot_found.card_in_slot = true
 	else:
-		player_hand.add_card_to_hand(card_being_dragged)
+		player_hand.add_card_to_hand(card_being_dragged, player_hand.card_move_speed)
 	card_being_dragged = null
 	
