@@ -10,14 +10,15 @@ extends Node2D
 
 const CARD = preload("res://scenes/card.tscn")
 
-var player_deck = ["Knight", "Knight", "Knight"]
+var player_deck = ["Knight", "Archer", "Demon", "Knight"]
 
 func _ready() -> void:
+	player_deck.shuffle()
 	deck_rich_text_label.text = str(player_deck.size())
 
 func draw_card():
-	var card_drawn = player_deck[0]
-	player_deck.erase(card_drawn)
+	var card_drawn_name = player_deck[0]
+	player_deck.erase(card_drawn_name)
 	
 	if player_deck.size() <= 0:
 		deck_collision_shape_2d.disabled = true
@@ -26,6 +27,10 @@ func draw_card():
 	
 	deck_rich_text_label.text = str(player_deck.size())
 	var new_card = CARD.instantiate()
+	new_card.get_node("Attack").text = str(CardDatabase.CARDS[card_drawn_name][0])
+	new_card.get_node("Health").text = str(CardDatabase.CARDS[card_drawn_name][1])
+	new_card.get_node("CardImage").texture = load(CardDatabase.CARDS[card_drawn_name][2])
 	card_manager.add_child(new_card)
 	new_card.name = "Card"
 	player_hand.add_card_to_hand(new_card, card_draw_speed)
+	new_card.get_node("AnimationPlayer").play("card_flip")
