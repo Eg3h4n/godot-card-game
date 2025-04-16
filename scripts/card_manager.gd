@@ -124,3 +124,5 @@ func finish_drag():
 	player_hand.add_card_to_hand(card_being_dragged, player_hand.card_move_speed)
 	card_being_dragged = null
 	
+func reset_played_monster():
+	played_monster_card_this_turn = false

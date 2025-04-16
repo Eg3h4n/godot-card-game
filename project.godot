@@ -29,3 +29,7 @@ window/size/viewport_height=1080
 2d_physics/layer_1="Cards"
 2d_physics/layer_2="CardSlots"
 2d_physics/layer_3="Deck"
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0
