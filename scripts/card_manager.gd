@@ -3,12 +3,16 @@ extends Node2D
 @onready var player_hand: Node2D = $"../PlayerHand"
 @onready var input_manager: Node2D = $"../InputManager"
 
-const COLLISION_MASK_CARD = 1
-const COLLISION_MASK_CARD_SLOT = 2
+const COLLISION_MASK_CARD: int = 1
+const COLLISION_MASK_CARD_SLOT: int = 2
+const DEFAULT_CARD_SCALE: Vector2 = Vector2(0.8, 0.8)
+const FOCUSED_CARD_SCALE: Vector2 = Vector2(0.85, 0.85)
+const PLACED_CARD_SCALE: Vector2 = Vector2(0.6, 0.6)
 
 var screen_size
 var card_being_dragged
-var is_hovering_on_card
+var is_hovering_on_card: bool
+var played_monster_card_this_turn: bool = false
 
 func _ready() -> void:
 	screen_size = get_viewport_rect().size
@@ -66,21 +70,23 @@ func on_hovered_over_card(card):
 		highlight_card(card, true)
 
 func on_hovered_off_card(card):
-	if !card_being_dragged:
-		highlight_card(card, false)
-		# checking if hovered off to another card directly
-		var new_card_hovered = raycast_check_for_card()
-		if new_card_hovered:
-			highlight_card(new_card_hovered, true)
-		else:
-			is_hovering_on_card = false
+	if card.card_is_in_card_slot || card_being_dragged:
+		return
+		
+	highlight_card(card, false)
+	# checking if hovered off to another card directly
+	var new_card_hovered = raycast_check_for_card()
+	if new_card_hovered:
+		highlight_card(new_card_hovered, true)
+	else:
+		is_hovering_on_card = false
 
 func highlight_card(card, hovered):
 	if hovered:
-		card.scale = Vector2(1.05, 1.05)
+		card.scale = FOCUSED_CARD_SCALE
 		card.z_index = 2
 	else:
-		card.scale = Vector2(1, 1)
+		card.scale = DEFAULT_CARD_SCALE
 		card.z_index = 1
 
 func get_card_with_highest_z_index(cards):
@@ -94,19 +100,27 @@ func get_card_with_highest_z_index(cards):
 			highest_z_index = current_card.z_index
 	return highest_z_card
 
-func start_drag(card):
+func start_drag(card: Node2D):
 	card_being_dragged = card
-	card.scale = Vector2(1, 1)
+	card.scale = DEFAULT_CARD_SCALE
 
 func finish_drag():
-	card_being_dragged.scale = Vector2(1.05, 1.05)
-	var card_slot_found = raycast_check_for_card_slot()
+	card_being_dragged.scale = FOCUSED_CARD_SCALE
+	var card_slot_found: Node2D = raycast_check_for_card_slot()
 	if card_slot_found and not card_slot_found.card_in_slot:
-		player_hand.remove_card_from_hand(card_being_dragged)
-		card_being_dragged.position = card_slot_found.position
-		card_being_dragged.get_node("Area2D/CollisionShape2D").disabled = true
-		card_slot_found.card_in_slot = true
-	else:
-		player_hand.add_card_to_hand(card_being_dragged, player_hand.card_move_speed)
+		if card_being_dragged.card_type == card_slot_found.card_slot_type:
+			if !played_monster_card_this_turn:
+				card_being_dragged.card_is_in_card_slot = true;
+				card_being_dragged.scale = PLACED_CARD_SCALE
+				card_being_dragged.z_index = -1
+				is_hovering_on_card = false
+				player_hand.remove_card_from_hand(card_being_dragged)
+				card_being_dragged.global_position = card_slot_found.global_position
+				card_being_dragged.get_node("Area2D/CollisionShape2D").disabled = true
+				card_slot_found.card_in_slot = true
+				card_being_dragged = null
+				played_monster_card_this_turn = true
+				return
+	player_hand.add_card_to_hand(card_being_dragged, player_hand.card_move_speed)
 	card_being_dragged = null
 	

@@ -4,6 +4,8 @@ signal hovered
 signal hovered_off
 
 var position_in_hand : Vector2
+var card_is_in_card_slot : bool
+var card_type: String
 
 func _ready() -> void:
 	get_parent().connect_card_signal(self)

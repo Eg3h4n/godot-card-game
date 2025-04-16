@@ -2,8 +2,8 @@ extends Node2D
 
 @onready var card_manager: Node2D = $"../CardManager"
 @export var card_move_speed: float = 0.1
-const CARD_WIDTH = 200
-const HAND_Y_POSITION = 890
+const CARD_WIDTH = 160
+const HAND_Y_POSITION = 955
 
 var player_hand = []
 var center_screen_x
