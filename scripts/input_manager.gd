@@ -2,9 +2,11 @@ extends Node2D
 
 @onready var card_manager: Node2D = $"../CardManager"
 @onready var deck: Node2D = $"../Deck"
+@onready var battle_manager: Node = $"../BattleManager"
 
 const COLLISION_MASK_CARD = 1
 const COLLISION_MASK_DECK = 4
+const COLLISION_MASK_OPPONENT_CARD = 8
 
 signal left_mouse_button_clicked
 signal left_mouse_button_released
@@ -35,3 +37,5 @@ func raycast_at_cursor():
 		elif result_collision_mask == COLLISION_MASK_DECK:
 			# deck clicked
 			deck.draw_card()
+		elif result_collision_mask == COLLISION_MASK_OPPONENT_CARD:
+			battle_manager.opponent_card_selected(result[0].collider.get_parent())

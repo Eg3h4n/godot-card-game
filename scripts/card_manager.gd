@@ -131,7 +131,7 @@ func finish_drag():
 	
 func card_clicked(card):
 	if card.card_slot_card_is_in:
-		if battle_manager.is_opponents_turn:
+		if battle_manager.is_opponents_turn || battle_manager.player_is_attacking:
 			return
 		if card in battle_manager.player_cards_that_attacked_this_turn:
 			return

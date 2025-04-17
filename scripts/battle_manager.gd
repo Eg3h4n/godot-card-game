@@ -22,6 +22,7 @@ var player_cards_that_attacked_this_turn = []
 var player_health_amount: int
 var opponent_health_amount: int
 var is_opponents_turn: bool = false
+var player_is_attacking: bool = false
 
 
 func _ready() -> void:
@@ -106,6 +107,7 @@ func attack_player(attacking_card, attacking_side):
 	if attacking_side == "Opponent":
 		new_pos_y = 1080
 	else:
+		player_is_attacking = true
 		new_pos_y = 0
 		player_cards_that_attacked_this_turn.append(attacking_card)
 	attacking_card.z_index = 5
@@ -127,8 +129,13 @@ func attack_player(attacking_card, attacking_side):
 	attacking_card.z_index = 0
 	await wait_for_seconds(1)
 	
+	if attacking_side == "Player":
+		player_is_attacking = false
+	
 func attack_card(attacking_card, defending_card, attacking_side):
 	if attacking_side == "Player":
+		player_is_attacking = true
+		card_manager.selected_monster = null
 		player_cards_that_attacked_this_turn.append(attacking_card)
 	attacking_card.z_index = 5
 	var new_pos: Vector2 = Vector2(defending_card.global_position.x, defending_card.global_position.y + BATTLE_POS_OFFSET)
@@ -148,24 +155,27 @@ func attack_card(attacking_card, defending_card, attacking_side):
 	
 	var card_was_destroyed = false
 	if attacking_card.health <= 0:
-		destroy_card(attacking_card, attacking_side)
+		await destroy_card(attacking_card, attacking_side)
 		card_was_destroyed = true
 	if defending_card.health <= 0:
-		destroy_card(defending_card, "Player" if attacking_side == "Opponent" else "Player" )
+		await destroy_card(defending_card, "Player" if attacking_side == "Opponent" else "Player" )
 		card_was_destroyed = true
 	
 	if card_was_destroyed:
 		await wait_for_seconds(1)
+		
+	if attacking_side == "Player":
+		player_is_attacking = false
 
 func destroy_card(card, card_owner):
 	var new_pos
-	if card_owner == "Player":
+	if card_owner == "Player" && card in player_cards_on_battlefield:
 		card.defeated = true
 		card.get_node("Area2D/CollisionShape2D").disabled = true
 		new_pos = player_discard_pile.position
 		if card in player_cards_on_battlefield:
 			player_cards_on_battlefield.erase(card)
-		card.card_slot_card_is_in.get_node("Area2D/CollisionShape2D").disabled = false
+		card.card_slot_card_is_in.activate_card_slot_collision()
 	else:
 		new_pos = opponent_discard_pile.position
 		if card in opponent_cards_on_battlefield:
@@ -178,7 +188,11 @@ func destroy_card(card, card_owner):
 	await wait_for_seconds(0.25)
 	
 	# remove card from arrays such as player_cards_on_battlefield
-
+func opponent_card_selected(defending_card):
+	var attacking_card = card_manager.selected_monster
+	if attacking_card and defending_card in opponent_cards_on_battlefield and !player_is_attacking:
+		attack_card(attacking_card, defending_card, "Player")
+		card_manager.selected_monster = null
 
 func tween_animation(object, property:String, tween_value, duration:float):
 	var tween = get_tree().create_tween()

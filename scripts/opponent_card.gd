@@ -5,3 +5,4 @@ var card_slot_card_is_in
 var card_type: String
 var attack: int
 var health: int
+var defeated: bool = false
