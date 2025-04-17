@@ -1,7 +1,6 @@
 extends Node2D
 @onready var card_manager: Node2D = $"../CardManager"
 @onready var opponent_hand: Node2D = $"../OpponentHand"
-@onready var deck_collision_shape_2d: CollisionShape2D = $Area2D/CollisionShape2D
 @onready var deck_sprite_2d: Sprite2D = $Sprite2D
 @onready var deck_rich_text_label: RichTextLabel = $RichTextLabel
 
@@ -34,9 +33,10 @@ func draw_card():
 	
 	deck_rich_text_label.text = str(opponent_deck.size())
 	var new_card = OPPONENT_CARD.instantiate()
-	new_card.attack = str(CardDatabase.CARDS[card_drawn_name][0])
-	new_card.get_node("Attack").text = str(CardDatabase.CARDS[card_drawn_name][0])
-	new_card.get_node("Health").text = str(CardDatabase.CARDS[card_drawn_name][1])
+	new_card.attack = CardDatabase.CARDS[card_drawn_name][0]
+	new_card.get_node("Attack").text = str(new_card.attack)
+	new_card.health = CardDatabase.CARDS[card_drawn_name][1]
+	new_card.get_node("Health").text = str(new_card.health)
 	new_card.get_node("CardImage").texture = load(CardDatabase.CARDS[card_drawn_name][2])
 	new_card.card_type= CardDatabase.CARDS[card_drawn_name][3]
 	card_manager.add_child(new_card)

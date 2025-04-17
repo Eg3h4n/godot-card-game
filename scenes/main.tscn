@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://le1bf8gt1tca"]
+[gd_scene load_steps=16 format=3 uid="uid://le1bf8gt1tca"]
 
 [ext_resource type="Script" uid="uid://dinvpt80c0h8l" path="res://scripts/card_manager.gd" id="1_jyhfs"]
 [ext_resource type="Texture2D" uid="uid://e20sulhke5ue" path="res://assets/bg1.png" id="1_trceg"]
@@ -13,6 +13,7 @@
 [ext_resource type="Script" uid="uid://b1uwy3emgwux8" path="res://scripts/battle_manager.gd" id="9_85g3d"]
 [ext_resource type="Script" uid="uid://bbujadvlpu4wy" path="res://scripts/opponent_deck.gd" id="9_eb6dy"]
 [ext_resource type="Script" uid="uid://b7nph70k1k6p2" path="res://scripts/opponent_hand.gd" id="12_trceg"]
+[ext_resource type="Texture2D" uid="uid://yde5ahhyafi1" path="res://assets/CardSlot.png" id="14_a8y0u"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lquwl"]
 size = Vector2(175, 263)
@@ -205,7 +206,40 @@ text = "End Turn"
 
 [node name="BattleManager" type="Node" parent="."]
 script = ExtResource("9_85g3d")
+INITIAL_HEALTH = 20
 
 [node name="BattleTimer" type="Timer" parent="."]
+
+[node name="PlayerHealth" type="RichTextLabel" parent="."]
+modulate = Color(1, 0, 0, 1)
+offset_left = 130.0
+offset_top = 670.0
+offset_right = 170.0
+offset_bottom = 710.0
+scale = Vector2(2, 2)
+text = "30"
+
+[node name="OpponentHealth" type="RichTextLabel" parent="."]
+modulate = Color(1, 0, 0, 1)
+offset_left = 130.0
+offset_top = 430.0
+offset_right = 170.0
+offset_bottom = 470.0
+scale = Vector2(2, 2)
+text = "30"
+
+[node name="PlayerDiscardPile" type="Node2D" parent="."]
+position = Vector2(1500, 660)
+scale = Vector2(0.6, 0.6)
+
+[node name="Sprite2D" type="Sprite2D" parent="PlayerDiscardPile"]
+texture = ExtResource("14_a8y0u")
+
+[node name="OpponentDiscardPile" type="Node2D" parent="."]
+position = Vector2(400, 270)
+scale = Vector2(0.6, 0.6)
+
+[node name="Sprite2D" type="Sprite2D" parent="OpponentDiscardPile"]
+texture = ExtResource("14_a8y0u")
 
 [connection signal="pressed" from="EndTurnButton" to="BattleManager" method="_on_end_turn_button_pressed"]

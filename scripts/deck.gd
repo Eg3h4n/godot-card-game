@@ -39,8 +39,10 @@ func draw_card():
 	
 	deck_rich_text_label.text = str(player_deck.size())
 	var new_card = CARD.instantiate()
-	new_card.get_node("Attack").text = str(CardDatabase.CARDS[card_drawn_name][0])
-	new_card.get_node("Health").text = str(CardDatabase.CARDS[card_drawn_name][1])
+	new_card.attack = CardDatabase.CARDS[card_drawn_name][0]
+	new_card.get_node("Attack").text = str(new_card.attack)
+	new_card.health = CardDatabase.CARDS[card_drawn_name][1]
+	new_card.get_node("Health").text = str(new_card.health)
 	new_card.get_node("CardImage").texture = load(CardDatabase.CARDS[card_drawn_name][2])
 	new_card.card_type= CardDatabase.CARDS[card_drawn_name][3]
 	card_manager.add_child(new_card)

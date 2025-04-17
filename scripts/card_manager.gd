@@ -2,6 +2,7 @@ extends Node2D
 
 @onready var player_hand: Node2D = $"../PlayerHand"
 @onready var input_manager: Node2D = $"../InputManager"
+@onready var battle_manager: Node = $"../BattleManager"
 
 const COLLISION_MASK_CARD: int = 1
 const COLLISION_MASK_CARD_SLOT: int = 2
@@ -13,6 +14,7 @@ var screen_size
 var card_being_dragged
 var is_hovering_on_card: bool
 var played_monster_card_this_turn: bool = false
+var selected_monster
 
 func _ready() -> void:
 	screen_size = get_viewport_rect().size
@@ -65,12 +67,14 @@ func connect_card_signal(card):
 	card.hovered_off.connect(on_hovered_off_card)
 	
 func on_hovered_over_card(card):
+	if card.card_slot_card_is_in:
+		return
 	if !is_hovering_on_card:
 		is_hovering_on_card = true
 		highlight_card(card, true)
 
 func on_hovered_off_card(card):
-	if card.card_is_in_card_slot || card_being_dragged:
+	if card.card_slot_card_is_in || card_being_dragged || card.defeated:
 		return
 		
 	highlight_card(card, false)
@@ -110,19 +114,52 @@ func finish_drag():
 	if card_slot_found and not card_slot_found.card_in_slot:
 		if card_being_dragged.card_type == card_slot_found.card_slot_type:
 			if !played_monster_card_this_turn:
-				card_being_dragged.card_is_in_card_slot = true;
+				card_being_dragged.card_slot_card_is_in = card_slot_found;
 				card_being_dragged.scale = PLACED_CARD_SCALE
 				card_being_dragged.z_index = -1
 				is_hovering_on_card = false
 				player_hand.remove_card_from_hand(card_being_dragged)
 				card_being_dragged.global_position = card_slot_found.global_position
-				card_being_dragged.get_node("Area2D/CollisionShape2D").disabled = true
 				card_slot_found.card_in_slot = true
+				card_slot_found.get_node("Area2D/CollisionShape2D").disabled = true
+				battle_manager.player_cards_on_battlefield.append(card_being_dragged)
 				card_being_dragged = null
 				played_monster_card_this_turn = true
 				return
 	player_hand.add_card_to_hand(card_being_dragged, player_hand.card_move_speed)
 	card_being_dragged = null
 	
+func card_clicked(card):
+	if card.card_slot_card_is_in:
+		if battle_manager.is_opponents_turn:
+			return
+		if card in battle_manager.player_cards_that_attacked_this_turn:
+			return
+		if battle_manager.opponent_cards_on_battlefield.size() == 0:
+			battle_manager.attack_player(card, "Player")
+			return
+		else:
+			select_card_for_battle(card)
+		pass
+	else:
+		start_drag(card)
+	
 func reset_played_monster():
 	played_monster_card_this_turn = false
+	
+func unselect_selected_monster():
+	if selected_monster:
+		selected_monster.position.y += 20
+		selected_monster = null
+	
+func select_card_for_battle(card):
+	if selected_monster:
+		if selected_monster == card:
+			unselect_selected_monster()
+		else:
+			selected_monster.position.y += 20
+			selected_monster = card
+			card.position.y -= 20
+	else:
+		selected_monster = card
+		card.position.y -= 20

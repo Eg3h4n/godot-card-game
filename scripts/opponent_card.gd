@@ -1,6 +1,7 @@
 extends Node2D
 
 var position_in_hand : Vector2
-var card_is_in_card_slot : bool
+var card_slot_card_is_in
 var card_type: String
 var attack: int
+var health: int
