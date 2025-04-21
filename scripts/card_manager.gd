@@ -86,6 +86,8 @@ func on_hovered_off_card(card):
 		is_hovering_on_card = false
 
 func highlight_card(card, hovered):
+	if card.card_slot_card_is_in:
+		return
 	if hovered:
 		card.scale = FOCUSED_CARD_SCALE
 		card.z_index = 2
@@ -113,31 +115,36 @@ func finish_drag():
 	var card_slot_found: Node2D = raycast_check_for_card_slot()
 	if card_slot_found and not card_slot_found.card_in_slot:
 		if card_being_dragged.card_type == card_slot_found.card_slot_type:
-			if !played_monster_card_this_turn:
-				card_being_dragged.card_slot_card_is_in = card_slot_found;
-				card_being_dragged.scale = PLACED_CARD_SCALE
-				card_being_dragged.z_index = -1
-				is_hovering_on_card = false
-				player_hand.remove_card_from_hand(card_being_dragged)
-				card_being_dragged.global_position = card_slot_found.global_position
-				card_slot_found.card_in_slot = true
-				card_slot_found.get_node("Area2D/CollisionShape2D").disabled = true
-				battle_manager.player_cards_on_battlefield.append(card_being_dragged)
+			if card_being_dragged.card_type == "Monster" && played_monster_card_this_turn:
+				player_hand.add_card_to_hand(card_being_dragged, player_hand.card_move_speed)
 				card_being_dragged = null
-				played_monster_card_this_turn = true
 				return
+			card_being_dragged.card_slot_card_is_in = card_slot_found;
+			card_being_dragged.scale = PLACED_CARD_SCALE
+			card_being_dragged.z_index = -1
+			is_hovering_on_card = false
+			player_hand.remove_card_from_hand(card_being_dragged)
+			card_being_dragged.global_position = card_slot_found.global_position
+			card_slot_found.card_in_slot = true
+			card_slot_found.get_node("Area2D/CollisionShape2D").disabled = true
+			battle_manager.player_cards_on_battlefield.append(card_being_dragged)
+
+			if card_being_dragged.card_type == "Monster":
+				battle_manager.player_cards_on_battlefield.append(card_being_dragged)
+				played_monster_card_this_turn = true
+			else:
+				print("played magic card")
+			card_being_dragged = null
+			return
 	player_hand.add_card_to_hand(card_being_dragged, player_hand.card_move_speed)
 	card_being_dragged = null
 	
 func card_clicked(card):
 	if card.card_slot_card_is_in:
-		if battle_manager.is_opponents_turn || battle_manager.player_is_attacking:
-			return
-		if card in battle_manager.player_cards_that_attacked_this_turn:
+		if battle_manager.is_opponents_turn || battle_manager.player_is_attacking || card in battle_manager.player_cards_that_attacked_this_turn || card.card_type != "Monster":
 			return
 		if battle_manager.opponent_cards_on_battlefield.size() == 0:
 			battle_manager.attack_player(card, "Player")
-			return
 		else:
 			select_card_for_battle(card)
 		pass

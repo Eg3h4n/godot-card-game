@@ -199,6 +199,14 @@ offset_bottom = 100.0
 scale = Vector2(2, 2)
 text = "0"
 
+[node name="Ability" type="RichTextLabel" parent="."]
+modulate = Color(0, 0, 0, 1)
+offset_left = -75.0
+offset_top = 50.0
+offset_right = 80.0
+offset_bottom = 110.0
+text = "Ability Text"
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
 &"": SubResource("AnimationLibrary_8w5pg")

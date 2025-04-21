@@ -11,7 +11,7 @@ extends Node2D
 
 const CARD = preload("res://scenes/card.tscn")
 
-var player_deck = ["Knight", "Archer", "Demon", "Knight", "Knight", "Archer", "Demon", "Knight"]
+var player_deck = ["Knight", "Archer", "Tornado", "Knight", "Tornado", "Archer", "Demon", "Knight"]
 var drawn_card_this_turn: bool = false
 
 func _ready() -> void:
@@ -39,12 +39,18 @@ func draw_card():
 	
 	deck_rich_text_label.text = str(player_deck.size())
 	var new_card = CARD.instantiate()
-	new_card.attack = CardDatabase.CARDS[card_drawn_name][0]
-	new_card.get_node("Attack").text = str(new_card.attack)
-	new_card.health = CardDatabase.CARDS[card_drawn_name][1]
-	new_card.get_node("Health").text = str(new_card.health)
+	new_card.card_type = CardDatabase.CARDS[card_drawn_name][3]
+	if new_card.card_type == "Monster":
+		new_card.get_node("Ability").visible = false
+		new_card.attack = CardDatabase.CARDS[card_drawn_name][0]
+		new_card.get_node("Attack").text = str(new_card.attack)
+		new_card.health = CardDatabase.CARDS[card_drawn_name][1]
+		new_card.get_node("Health").text = str(new_card.health)
+	else:
+		new_card.get_node("Attack").visible = false
+		new_card.get_node("Health").visible = false
+		new_card.get_node("Ability").text =  CardDatabase.CARDS[card_drawn_name][4]
 	new_card.get_node("CardImage").texture = load(CardDatabase.CARDS[card_drawn_name][2])
-	new_card.card_type= CardDatabase.CARDS[card_drawn_name][3]
 	card_manager.add_child(new_card)
 	new_card.name = "Card"
 	player_hand.add_card_to_hand(new_card, card_draw_speed)
