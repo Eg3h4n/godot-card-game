@@ -11,6 +11,8 @@ const COLLISION_MASK_OPPONENT_CARD = 8
 signal left_mouse_button_clicked
 signal left_mouse_button_released
 
+var input_disabled: bool = false
+
 func _input(event):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
@@ -22,6 +24,8 @@ func _input(event):
 				
 
 func raycast_at_cursor():
+	if input_disabled:
+		return
 	var space_state = get_viewport().world_2d.direct_space_state
 	var parameters = PhysicsPointQueryParameters2D.new()
 	parameters.position = get_viewport().get_mouse_position()

@@ -133,7 +133,7 @@ func finish_drag():
 				battle_manager.player_cards_on_battlefield.append(card_being_dragged)
 				played_monster_card_this_turn = true
 			else:
-				print("played magic card")
+				card_being_dragged.ability_script.trigger_ability(input_manager, battle_manager, card_being_dragged)
 			card_being_dragged = null
 			return
 	player_hand.add_card_to_hand(card_being_dragged, player_hand.card_move_speed)

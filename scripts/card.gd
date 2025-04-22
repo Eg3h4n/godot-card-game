@@ -9,6 +9,7 @@ var card_type: String
 var attack: int
 var health: int
 var defeated: bool = false
+var ability_script
 
 func _ready() -> void:
 	get_parent().connect_card_signal(self)

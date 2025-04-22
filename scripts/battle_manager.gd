@@ -42,16 +42,14 @@ func _ready() -> void:
 	
 func _on_end_turn_button_pressed() -> void:
 	is_opponents_turn = true
-	end_turn_button.disabled = true
-	end_turn_button.visible = false
+	toggle_end_turn_button(false)
 	
 	card_manager.unselect_selected_monster()
 	player_cards_that_attacked_this_turn = []
 	
 	await process_opponent_turn()
 	
-	end_turn_button.disabled = false
-	end_turn_button.visible = true
+	toggle_end_turn_button(true)
 	deck.reset_draw()
 	card_manager.reset_played_monster()
 	is_opponents_turn = false
@@ -202,3 +200,7 @@ func wait_for_seconds(wait_time):
 	battle_timer.wait_time = wait_time
 	battle_timer.start()
 	await battle_timer.timeout
+
+func toggle_end_turn_button(is_enabled: bool):
+		end_turn_button.disabled = !is_enabled
+		end_turn_button.visible = is_enabled
