@@ -128,12 +128,12 @@ func finish_drag():
 			card_slot_found.card_in_slot = true
 			card_slot_found.get_node("Area2D/CollisionShape2D").disabled = true
 			battle_manager.player_cards_on_battlefield.append(card_being_dragged)
-
+			
 			if card_being_dragged.card_type == "Monster":
-				battle_manager.player_cards_on_battlefield.append(card_being_dragged)
 				played_monster_card_this_turn = true
-			else:
-				card_being_dragged.ability_script.trigger_ability(input_manager, battle_manager, card_being_dragged)
+				
+			if card_being_dragged.ability_script:
+				card_being_dragged.ability_script.trigger_ability(input_manager, battle_manager, card_being_dragged, "card_placed")
 			card_being_dragged = null
 			return
 	player_hand.add_card_to_hand(card_being_dragged, player_hand.card_move_speed)
@@ -141,7 +141,7 @@ func finish_drag():
 	
 func card_clicked(card):
 	if card.card_slot_card_is_in:
-		if battle_manager.is_opponents_turn || battle_manager.player_is_attacking || card in battle_manager.player_cards_that_attacked_this_turn || card.card_type != "Monster":
+		if battle_manager.is_opponents_turn || card in battle_manager.player_cards_that_attacked_this_turn || card.card_type != "Monster":
 			return
 		if battle_manager.opponent_cards_on_battlefield.size() == 0:
 			battle_manager.attack_player(card, "Player")

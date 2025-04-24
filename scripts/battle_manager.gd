@@ -10,6 +10,7 @@ extends Node
 @onready var opponent_health: RichTextLabel = $"../OpponentHealth"
 @onready var player_discard_pile: Node2D = $"../PlayerDiscardPile"
 @onready var opponent_discard_pile: Node2D = $"../OpponentDiscardPile"
+@onready var input_manager: Node2D = $"../InputManager"
 
 const CARD_IN_SLOT_SCALE: Vector2 = Vector2(0.6, 0.6)
 const BATTLE_POS_OFFSET = 25
@@ -46,7 +47,9 @@ func _on_end_turn_button_pressed() -> void:
 	
 	card_manager.unselect_selected_monster()
 	player_cards_that_attacked_this_turn = []
-	
+	for card in player_cards_that_attacked_this_turn:
+		if card.ability_script:
+			card.ability_script.end_turn_reset()
 	await process_opponent_turn()
 	
 	toggle_end_turn_button(true)
@@ -100,12 +103,16 @@ func try_play_card_with_highest_attack():
 	
 	await wait_for_seconds(1)
 
+func direct_damage(damage_amount):
+	opponent_health_amount -= damage_amount
+	opponent_health.text = str(opponent_health_amount)
+
 func attack_player(attacking_card, attacking_side):
 	var new_pos_y
 	if attacking_side == "Opponent":
 		new_pos_y = 1080
 	else:
-		player_is_attacking = true
+		input_manager.input_disabled = true
 		new_pos_y = 0
 		player_cards_that_attacked_this_turn.append(attacking_card)
 	attacking_card.z_index = 5
@@ -128,7 +135,9 @@ func attack_player(attacking_card, attacking_side):
 	await wait_for_seconds(1)
 	
 	if attacking_side == "Player":
-		player_is_attacking = false
+		if attacking_card.ability_script:
+			await attacking_card.ability_script.trigger_ability(input_manager, self, attacking_card, "after_attack")
+		input_manager.input_disabled = false
 	
 func attack_card(attacking_card, defending_card, attacking_side):
 	if attacking_side == "Player":
@@ -153,21 +162,23 @@ func attack_card(attacking_card, defending_card, attacking_side):
 	
 	var card_was_destroyed = false
 	if attacking_card.health <= 0:
-		await destroy_card(attacking_card, attacking_side)
+		await destroy_card(attacking_card)
 		card_was_destroyed = true
 	if defending_card.health <= 0:
-		await destroy_card(defending_card, "Player" if attacking_side == "Opponent" else "Player" )
+		await destroy_card(defending_card)
 		card_was_destroyed = true
 	
 	if card_was_destroyed:
 		await wait_for_seconds(1)
 		
 	if attacking_side == "Player":
+		if attacking_card.ability_script:
+			await attacking_card.ability_script.trigger_ability(input_manager, self, attacking_card, "after_attack")
 		player_is_attacking = false
 
-func destroy_card(card, card_owner):
+func destroy_card(card):
 	var new_pos
-	if card_owner == "Player" && card in player_cards_on_battlefield:
+	if card.is_players_card && card in player_cards_on_battlefield:
 		card.defeated = true
 		card.get_node("Area2D/CollisionShape2D").disabled = true
 		new_pos = player_discard_pile.position
@@ -185,7 +196,7 @@ func destroy_card(card, card_owner):
 	tween_animation(card, "position", new_pos, 0.2)
 	await wait_for_seconds(0.25)
 	
-	# remove card from arrays such as player_cards_on_battlefield
+	
 func opponent_card_selected(defending_card):
 	var attacking_card = card_manager.selected_monster
 	if attacking_card and defending_card in opponent_cards_on_battlefield and !player_is_attacking:

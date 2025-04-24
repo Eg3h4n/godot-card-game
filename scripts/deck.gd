@@ -41,7 +41,6 @@ func draw_card():
 	var new_card = CARD.instantiate()
 	new_card.card_type = CardDatabase.CARDS[card_drawn_name][3]
 	if new_card.card_type == "Monster":
-		new_card.get_node("Ability").visible = false
 		new_card.attack = CardDatabase.CARDS[card_drawn_name][0]
 		new_card.get_node("Attack").text = str(new_card.attack)
 		new_card.health = CardDatabase.CARDS[card_drawn_name][1]
@@ -49,10 +48,12 @@ func draw_card():
 	else:
 		new_card.get_node("Attack").visible = false
 		new_card.get_node("Health").visible = false
+	var new_card_ability_script_path = CardDatabase.CARDS[card_drawn_name][5]
+	if new_card_ability_script_path:
 		new_card.get_node("Ability").text =  CardDatabase.CARDS[card_drawn_name][4]
-		var new_card_ability_script_path = CardDatabase.CARDS[card_drawn_name][5]
-		if new_card_ability_script_path:
-			new_card.ability_script = load(new_card_ability_script_path).new()
+		new_card.ability_script = load(new_card_ability_script_path).new()
+	else:
+		new_card.get_node("Ability").visible = false
 	new_card.get_node("CardImage").texture = load(CardDatabase.CARDS[card_drawn_name][2])
 	card_manager.add_child(new_card)
 	new_card.name = "Card"

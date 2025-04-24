@@ -10,6 +10,7 @@ var attack: int
 var health: int
 var defeated: bool = false
 var ability_script
+var is_players_card: bool = true
 
 func _ready() -> void:
 	get_parent().connect_card_signal(self)

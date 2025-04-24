@@ -6,3 +6,4 @@ var card_type: String
 var attack: int
 var health: int
 var defeated: bool = false
+var is_players_card: bool = false

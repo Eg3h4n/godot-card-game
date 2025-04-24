@@ -1,0 +1,23 @@
+extends Node
+
+@export var arrow_damage: int = 1
+
+const ABILITY_TRIGGER_EVENT = "card_placed"
+
+func trigger_ability(input_manager, battle_manager, card_with_ability, trigger_event):
+	if trigger_event != ABILITY_TRIGGER_EVENT:
+		return
+	input_manager.input_disabled = true
+	battle_manager.toggle_end_turn_button(false)
+	
+	await battle_manager.wait_for_seconds(1)
+	
+	battle_manager.direct_damage(arrow_damage)
+	
+	await battle_manager.wait_for_seconds(1)
+	
+	battle_manager.toggle_end_turn_button(true)
+	input_manager.input_disabled = false
+
+func end_turn_reset():
+	pass
