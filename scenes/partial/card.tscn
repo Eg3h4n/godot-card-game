@@ -168,6 +168,11 @@ _data = {
 position = Vector2(140, 955)
 scale = Vector2(0.8, 0.8)
 script = ExtResource("1_6u4wf")
+card_name = null
+attack = null
+health = null
+ability_script = null
+is_players_card = null
 
 [node name="CardBackImage" type="Sprite2D" parent="."]
 texture = ExtResource("2_kg30u")

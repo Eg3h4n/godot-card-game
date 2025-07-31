@@ -1,0 +1,134 @@
+[gd_scene load_steps=10 format=3 uid="uid://cbocc2dj1ewli"]
+
+[ext_resource type="Script" uid="uid://bnqpoxw5qa4h" path="res://scripts/field.gd" id="1_o1jc5"]
+[ext_resource type="Script" uid="uid://dinvpt80c0h8l" path="res://scripts/card_manager.gd" id="2_3uwxm"]
+[ext_resource type="PackedScene" uid="uid://dqnqyt5nocrj6" path="res://scenes/partial/card_slot.tscn" id="3_5hyay"]
+[ext_resource type="PackedScene" uid="uid://deiawtkm3np2a" path="res://scenes/partial/card.tscn" id="3_85wfc"]
+[ext_resource type="Script" uid="uid://cw6kv82v3yf56" path="res://scripts/hand.gd" id="5_huyxb"]
+[ext_resource type="Script" uid="uid://d150dgi1qxwhm" path="res://scripts/deck.gd" id="6_lqnbn"]
+[ext_resource type="Texture2D" uid="uid://s6y8lwi6bejc" path="res://assets/Deck.png" id="7_ubdmh"]
+[ext_resource type="Texture2D" uid="uid://yde5ahhyafi1" path="res://assets/CardSlot.png" id="10_llwvo"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ndrgh"]
+size = Vector2(175, 263)
+
+[node name="PlayerField" type="Node2D" node_paths=PackedStringArray("discard_pile", "hand", "card_slots", "deck_count_label", "health_label", "card_manager", "deck")]
+script = ExtResource("1_o1jc5")
+player_id = "Player"
+discard_pile = NodePath("PlayerDiscardPile")
+hand = NodePath("PlayerHand")
+card_slots = NodePath("PlayerCardSlots")
+deck_count_label = NodePath("PlayerDeck/DeckCountLabel")
+health_label = NodePath("PlayerHealthLabel")
+card_manager = NodePath("CardManager")
+deck = NodePath("PlayerDeck")
+
+[node name="CardManager" type="Node2D" parent="." node_paths=PackedStringArray("hand_container")]
+script = ExtResource("2_3uwxm")
+card_scene = ExtResource("3_85wfc")
+hand_container = NodePath("../PlayerHand")
+
+[node name="PlayerCardSlots" type="Node2D" parent="."]
+position = Vector2(960, 660)
+
+[node name="CardSlot" parent="PlayerCardSlots" instance=ExtResource("3_5hyay")]
+z_index = -3
+position = Vector2(-280, 90)
+scale = Vector2(0.6, 0.6)
+card_slot_type = "Magic"
+
+[node name="CardSlot2" parent="PlayerCardSlots" instance=ExtResource("3_5hyay")]
+z_index = -3
+position = Vector2(-140, 90)
+scale = Vector2(0.6, 0.6)
+card_slot_type = "Magic"
+
+[node name="CardSlot3" parent="PlayerCardSlots" instance=ExtResource("3_5hyay")]
+z_index = -3
+position = Vector2(0, 90)
+scale = Vector2(0.6, 0.6)
+card_slot_type = "Magic"
+
+[node name="CardSlot4" parent="PlayerCardSlots" instance=ExtResource("3_5hyay")]
+z_index = -3
+position = Vector2(140, 90)
+scale = Vector2(0.6, 0.6)
+card_slot_type = "Magic"
+
+[node name="CardSlot5" parent="PlayerCardSlots" instance=ExtResource("3_5hyay")]
+z_index = -3
+position = Vector2(280, 90)
+scale = Vector2(0.6, 0.6)
+card_slot_type = "Magic"
+
+[node name="CardSlot6" parent="PlayerCardSlots" instance=ExtResource("3_5hyay")]
+z_index = -3
+position = Vector2(-280, -90)
+scale = Vector2(0.6, 0.6)
+
+[node name="CardSlot7" parent="PlayerCardSlots" instance=ExtResource("3_5hyay")]
+z_index = -3
+position = Vector2(-140, -90)
+scale = Vector2(0.6, 0.6)
+
+[node name="CardSlot8" parent="PlayerCardSlots" instance=ExtResource("3_5hyay")]
+z_index = -3
+position = Vector2(0, -90)
+scale = Vector2(0.6, 0.6)
+
+[node name="CardSlot9" parent="PlayerCardSlots" instance=ExtResource("3_5hyay")]
+z_index = -3
+position = Vector2(140, -90)
+scale = Vector2(0.6, 0.6)
+
+[node name="CardSlot10" parent="PlayerCardSlots" instance=ExtResource("3_5hyay")]
+z_index = -3
+position = Vector2(280, -90)
+scale = Vector2(0.6, 0.6)
+
+[node name="PlayerHand" type="Node2D" parent="."]
+script = ExtResource("5_huyxb")
+
+[node name="PlayerDeck" type="Node2D" parent="."]
+position = Vector2(140, 955)
+scale = Vector2(0.8, 0.8)
+script = ExtResource("6_lqnbn")
+
+[node name="Sprite2D" type="Sprite2D" parent="PlayerDeck"]
+z_index = -2
+texture = ExtResource("7_ubdmh")
+
+[node name="Area2D" type="Area2D" parent="PlayerDeck"]
+collision_layer = 4
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDeck/Area2D"]
+position = Vector2(-0.5, -0.5)
+shape = SubResource("RectangleShape2D_ndrgh")
+
+[node name="DeckCountLabel" type="RichTextLabel" parent="PlayerDeck"]
+modulate = Color(0, 0, 0, 1)
+z_index = -2
+offset_left = -9.0
+offset_top = -2.0
+offset_right = 31.0
+offset_bottom = 38.0
+scale = Vector2(2, 2)
+text = "0
+"
+
+[node name="PlayerHealthLabel" type="RichTextLabel" parent="."]
+modulate = Color(1, 0, 0, 1)
+offset_left = 130.0
+offset_top = 670.0
+offset_right = 170.0
+offset_bottom = 710.0
+scale = Vector2(2, 2)
+text = "30"
+
+[node name="PlayerDiscardPile" type="Node2D" parent="."]
+position = Vector2(1500, 660)
+scale = Vector2(0.6, 0.6)
+
+[node name="Sprite2D" type="Sprite2D" parent="PlayerDiscardPile"]
+texture = ExtResource("10_llwvo")

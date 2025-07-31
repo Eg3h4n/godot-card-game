@@ -1,0 +1,127 @@
+[gd_scene load_steps=10 format=3 uid="uid://br86hb4fma7wq"]
+
+[ext_resource type="PackedScene" uid="uid://c03uexc8i2tip" path="res://scenes/partial/opponent_card_slot.tscn" id="1_n6p83"]
+[ext_resource type="Script" uid="uid://bnqpoxw5qa4h" path="res://scripts/field.gd" id="1_wy1vv"]
+[ext_resource type="Script" uid="uid://dinvpt80c0h8l" path="res://scripts/card_manager.gd" id="2_l6eun"]
+[ext_resource type="Script" uid="uid://onu2jgsop36i" path="res://scripts/card_slot.gd" id="2_wy1vv"]
+[ext_resource type="PackedScene" uid="uid://deiawtkm3np2a" path="res://scenes/partial/card.tscn" id="3_fapl5"]
+[ext_resource type="Script" uid="uid://cw6kv82v3yf56" path="res://scripts/hand.gd" id="4_l6eun"]
+[ext_resource type="Script" uid="uid://d150dgi1qxwhm" path="res://scripts/deck.gd" id="5_fapl5"]
+[ext_resource type="Texture2D" uid="uid://s6y8lwi6bejc" path="res://assets/Deck.png" id="6_eir5f"]
+[ext_resource type="Texture2D" uid="uid://yde5ahhyafi1" path="res://assets/CardSlot.png" id="7_wlsgx"]
+
+[node name="OpponentField" type="Node2D" node_paths=PackedStringArray("discard_pile", "hand", "card_slots", "deck_count_label", "health_label", "card_manager", "deck")]
+script = ExtResource("1_wy1vv")
+player_id = "AI"
+is_local_player = false
+discard_pile = NodePath("OpponentDiscardPile")
+hand = NodePath("OpponentHand")
+card_slots = NodePath("OpponentCardSlots")
+deck_count_label = NodePath("OpponentDeck/RichTextLabel")
+health_label = NodePath("OpponentHealth")
+card_manager = NodePath("CardManager")
+deck = NodePath("OpponentDeck")
+
+[node name="CardManager" type="Node2D" parent="." node_paths=PackedStringArray("hand_container")]
+script = ExtResource("2_l6eun")
+card_scene = ExtResource("3_fapl5")
+hand_container = NodePath("../OpponentHand")
+
+[node name="OpponentCardSlots" type="Node2D" parent="."]
+position = Vector2(960, 280)
+
+[node name="CardSlot" parent="OpponentCardSlots" instance=ExtResource("1_n6p83")]
+position = Vector2(-280, 90)
+scale = Vector2(0.6, 0.6)
+script = ExtResource("2_wy1vv")
+
+[node name="CardSlot2" parent="OpponentCardSlots" instance=ExtResource("1_n6p83")]
+position = Vector2(-140, 90)
+scale = Vector2(0.6, 0.6)
+script = ExtResource("2_wy1vv")
+
+[node name="CardSlot3" parent="OpponentCardSlots" instance=ExtResource("1_n6p83")]
+position = Vector2(0, 90)
+scale = Vector2(0.6, 0.6)
+script = ExtResource("2_wy1vv")
+
+[node name="CardSlot4" parent="OpponentCardSlots" instance=ExtResource("1_n6p83")]
+position = Vector2(140, 90)
+scale = Vector2(0.6, 0.6)
+script = ExtResource("2_wy1vv")
+
+[node name="CardSlot5" parent="OpponentCardSlots" instance=ExtResource("1_n6p83")]
+position = Vector2(280, 90)
+scale = Vector2(0.6, 0.6)
+script = ExtResource("2_wy1vv")
+
+[node name="CardSlot6" parent="OpponentCardSlots" instance=ExtResource("1_n6p83")]
+position = Vector2(-280, -90)
+scale = Vector2(0.6, 0.6)
+script = ExtResource("2_wy1vv")
+card_slot_type = "Magic"
+
+[node name="CardSlot7" parent="OpponentCardSlots" instance=ExtResource("1_n6p83")]
+position = Vector2(-140, -90)
+scale = Vector2(0.6, 0.6)
+script = ExtResource("2_wy1vv")
+card_slot_type = "Magic"
+
+[node name="CardSlot8" parent="OpponentCardSlots" instance=ExtResource("1_n6p83")]
+position = Vector2(0, -90)
+scale = Vector2(0.6, 0.6)
+script = ExtResource("2_wy1vv")
+card_slot_type = "Magic"
+
+[node name="CardSlot9" parent="OpponentCardSlots" instance=ExtResource("1_n6p83")]
+position = Vector2(140, -90)
+scale = Vector2(0.6, 0.6)
+script = ExtResource("2_wy1vv")
+card_slot_type = "Magic"
+
+[node name="CardSlot10" parent="OpponentCardSlots" instance=ExtResource("1_n6p83")]
+position = Vector2(280, -90)
+scale = Vector2(0.6, 0.6)
+script = ExtResource("2_wy1vv")
+card_slot_type = "Magic"
+
+[node name="OpponentHand" type="Node2D" parent="."]
+script = ExtResource("4_l6eun")
+is_player = false
+
+[node name="OpponentDeck" type="Node2D" parent="."]
+position = Vector2(1780, 125)
+scale = Vector2(0.8, 0.8)
+script = ExtResource("5_fapl5")
+is_player = false
+
+[node name="Sprite2D" type="Sprite2D" parent="OpponentDeck"]
+z_index = -2
+texture = ExtResource("6_eir5f")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="OpponentDeck"]
+modulate = Color(0, 0, 0, 1)
+z_index = -2
+offset_left = -9.0
+offset_top = -2.0
+offset_right = 31.0
+offset_bottom = 38.0
+scale = Vector2(2, 2)
+text = "0
+"
+
+[node name="OpponentHealth" type="RichTextLabel" parent="."]
+modulate = Color(1, 0, 0, 1)
+offset_left = 130.0
+offset_top = 430.0
+offset_right = 170.0
+offset_bottom = 470.0
+scale = Vector2(2, 2)
+text = "30"
+
+[node name="OpponentDiscardPile" type="Node2D" parent="."]
+position = Vector2(400, 270)
+scale = Vector2(0.6, 0.6)
+
+[node name="Sprite2D" type="Sprite2D" parent="OpponentDiscardPile"]
+texture = ExtResource("7_wlsgx")

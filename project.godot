@@ -17,7 +17,9 @@ config/icon="res://assets/icon.svg"
 
 [autoload]
 
-CardDatabase="*res://scripts/card_database.gd"
+CardDatabase="*res://scripts/autoload/card_database.gd"
+NetworkManager="*res://scripts/autoload/network_manager.gd"
+GameManager="*res://scripts/autoload/game_manager.gd"
 
 [display]
 

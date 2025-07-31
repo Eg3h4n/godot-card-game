@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://2dliuj18j2g2"]
+
+[ext_resource type="Script" uid="uid://dsramnmnvqs8u" path="res://scripts/game_setup.gd" id="1_l8vmu"]
+[ext_resource type="PackedScene" uid="uid://bhnsss6n8dajq" path="res://scenes/board.tscn" id="2_2jpkn"]
+
+[node name="GameSetup" type="CanvasLayer" node_paths=PackedStringArray("loading_text_label")]
+script = ExtResource("1_l8vmu")
+board_scene = ExtResource("2_2jpkn")
+loading_text_label = NodePath("MarginContainer/RichTextLabel")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer"]
+layout_mode = 2
+text = "SETTING UP GAME"
+vertical_alignment = 1
