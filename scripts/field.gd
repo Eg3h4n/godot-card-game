@@ -16,10 +16,14 @@ func _ready():
 		if is_ancestor_of(slot):
 			slot.owner_id = player_id
 	# Connect to GameManager updates
-	if not GameManager.player_health_changed.is_connected(_on_player_health_changed):
-		GameManager.player_health_changed.connect(_on_player_health_changed)
 	if not GameManager.game_started.is_connected(_on_game_started):
 		GameManager.game_started.connect(_on_game_started)
+	if not GameManager.hand_updated.is_connected(_on_hand_updated):
+		GameManager.hand_updated.connect(_on_hand_updated)
+	if not GameManager.deck_updated.is_connected(_update_deck_count):
+		GameManager.deck_updated.connect(_update_deck_count)
+	if not GameManager.player_health_changed.is_connected(_on_player_health_changed):
+		GameManager.player_health_changed.connect(_on_player_health_changed)
 	
 	# (Future) Connect other signals for hand/deck changes
 	
@@ -38,9 +42,15 @@ func _on_game_started():
 func _initialize_from_gamemanager():
 	if GameManager.players.has(player_id):
 		var data = GameManager.players[player_id]
+		# Health
 		health_label.text = str(data.health)
+		# Deck count
+		_update_deck_count(player_id, data.deck.size())
+		# Hand UI
+		if hand and "update_hand_ui" in hand:
+			hand.update_hand_ui(data.hand)
 		deck.initialize(data.deck, is_local_player)
-		_update_deck_count(data.deck.size())
+
 # ------------------------------------------------------------
 # Health & Deck UI Updates
 # ------------------------------------------------------------
@@ -48,22 +58,20 @@ func _on_player_health_changed(id, new_health):
 	if id == player_id:
 		health_label.text = str(new_health)
 
-func _update_deck_count(count: int):
+func _on_hand_updated(id, new_hand):
+	if id == player_id and hand:
+		if "update_hand_ui" in hand:
+			hand.update_hand_ui(new_hand)
+
+func _update_deck_count(playerid, count: int):
 	if deck_count_label:
 		deck_count_label.text = str(count)
 
 # ------------------------------------------------------------
 # Card Drawing (Triggered by external systems like Board/BattleManager)
 # ------------------------------------------------------------
-func draw_card():
-	if not deck:
-		push_error("Field: Deck node missing for player %s" % player_id)
-		return
-	
-	var card_data = deck.draw_card()
-	if card_data.is_empty():
-		return
-	if card_manager:
-		card_manager.draw_card()
-		_update_deck_count(GameManager.players[player_id].deck.size())
-	
+func request_draw_card():
+	# Only trigger GameManager to handle card logic
+	if GameManager.players.has(player_id):
+		GameManager.draw_card(player_id)
+		print("Field: draw_card request for", player_id)

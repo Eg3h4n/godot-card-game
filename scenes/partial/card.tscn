@@ -12,7 +12,7 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Attack:modulate")
+tracks/0/path = NodePath("CardImage/Attack:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -24,7 +24,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Health:modulate")
+tracks/1/path = NodePath("CardImage/Health:modulate")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -88,7 +88,7 @@ step = 0.01
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Attack:modulate")
+tracks/0/path = NodePath("CardImage/Attack:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -100,7 +100,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Health:modulate")
+tracks/1/path = NodePath("CardImage/Health:modulate")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -164,15 +164,15 @@ _data = {
 &"card_flip": SubResource("Animation_sy11y")
 }
 
-[node name="Card" type="Node2D"]
+[node name="Card" type="Node2D" node_paths=PackedStringArray("card_back_image", "card_front_image", "label_ability_text", "label_attack", "label_health")]
 position = Vector2(140, 955)
 scale = Vector2(0.8, 0.8)
 script = ExtResource("1_6u4wf")
-card_name = null
-attack = null
-health = null
-ability_script = null
-is_players_card = null
+card_back_image = NodePath("CardBackImage")
+card_front_image = NodePath("CardImage")
+label_ability_text = NodePath("CardImage/Ability")
+label_attack = NodePath("CardImage/Attack")
+label_health = NodePath("CardImage/Health")
 
 [node name="CardBackImage" type="Sprite2D" parent="."]
 texture = ExtResource("2_kg30u")
@@ -181,12 +181,7 @@ texture = ExtResource("2_kg30u")
 z_index = -1
 texture = ExtResource("2_ktuci")
 
-[node name="Area2D" type="Area2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-shape = SubResource("RectangleShape2D_rjlel")
-
-[node name="Attack" type="RichTextLabel" parent="."]
+[node name="Attack" type="RichTextLabel" parent="CardImage"]
 modulate = Color(0, 0, 0, 0)
 offset_left = -85.0
 offset_top = 20.0
@@ -195,7 +190,7 @@ offset_bottom = 60.0
 scale = Vector2(2, 2)
 text = "0"
 
-[node name="Health" type="RichTextLabel" parent="."]
+[node name="Health" type="RichTextLabel" parent="CardImage"]
 modulate = Color(1, 0, 0, 0)
 offset_left = 30.0
 offset_top = 20.0
@@ -204,7 +199,7 @@ offset_bottom = 60.0
 scale = Vector2(2, 2)
 text = "0"
 
-[node name="Ability" type="RichTextLabel" parent="."]
+[node name="Ability" type="RichTextLabel" parent="CardImage"]
 modulate = Color(0, 0, 0, 1)
 offset_left = -84.0
 offset_top = 50.0
@@ -214,6 +209,11 @@ text = "Ability Text"
 scroll_active = false
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_rjlel")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {

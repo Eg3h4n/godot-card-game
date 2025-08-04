@@ -1,6 +1,5 @@
 extends Node
 
-signal card_played(player_id, card_data, target_id)
 signal attack_resolved(attacker_id, target_id, damage)
 
 @export var turn_duration: float = 30.0  # Optional: timer per turn
@@ -41,33 +40,8 @@ func _end_turn():
 # -----------------------------------------------------------
 # Card Play Logic
 # -----------------------------------------------------------
-func play_card(player_id: Variant, card_data: Dictionary, target_id: Variant = null):
-	# Ensure it's this player's turn
-	if player_id != _current_turn_player:
-		print("BattleManager: Invalid action - not player's turn")
-		return
-		
-	print("BattleManager: Player", player_id, "plays card:", card_data.name)
-	
-	# Apply card effect
-	_apply_card_effect(player_id, card_data, target_id)
-	
-	# Remove card from player's hand
-	var hand = GameManager.players[player_id].hand
-	if card_data in hand:
-		hand.erase(card_data)
-	
-	card_played.emit(player_id, card_data, target_id)
-
-func _apply_card_effect(player_id: Variant, card_data: Dictionary, target_id: Variant):
-	# Example effect: damage
-	var damage = card_data.get("damage", 0)
-	if target_id and GameManager.players.has(target_id):
-		GameManager.change_health(target_id, -damage)
-		attack_resolved.emit(player_id, target_id, damage)
-		print("BattleManager: Applied", damage, "damage to", target_id)
-	else:
-		print("BattleManager: No valid target for", card_data.name)
+func play_card_request(player_id: String, card_data: Dictionary, target_id: String = ""):
+	GameManager.play_card(player_id, card_data, target_id)
 
 # -----------------------------------------------------------
 # Phase Management (Optional future expansion)

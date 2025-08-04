@@ -1,17 +1,17 @@
-[gd_scene load_steps=7 format=3 uid="uid://bhnsss6n8dajq"]
+[gd_scene load_steps=6 format=3 uid="uid://bhnsss6n8dajq"]
 
 [ext_resource type="Texture2D" uid="uid://e20sulhke5ue" path="res://assets/bg1.png" id="1_bw3vb"]
 [ext_resource type="Script" uid="uid://dr0gwutodcq" path="res://scripts/board.gd" id="1_tx6nw"]
 [ext_resource type="PackedScene" uid="uid://cbocc2dj1ewli" path="res://scenes/partial/player_field.tscn" id="2_nglv8"]
 [ext_resource type="PackedScene" uid="uid://br86hb4fma7wq" path="res://scenes/partial/opponent_field.tscn" id="3_fv4ni"]
 [ext_resource type="Script" uid="uid://b1uwy3emgwux8" path="res://scripts/battle_manager.gd" id="5_dxjtj"]
-[ext_resource type="Script" uid="uid://bh8af4tcxqiai" path="res://scripts/input_manager.gd" id="6_dun80"]
 
-[node name="Board" type="Node2D" node_paths=PackedStringArray("player_field", "opponent_field", "end_turn_button")]
+[node name="Board" type="Node2D" node_paths=PackedStringArray("player_field", "opponent_field", "end_turn_button", "drag_canvas_layer")]
 script = ExtResource("1_tx6nw")
 player_field = NodePath("PlayerField")
 opponent_field = NodePath("OpponentField")
 end_turn_button = NodePath("CanvasLayer/EndTurnButton")
+drag_canvas_layer = NodePath("DragCanvasLayer")
 
 [node name="TextureRect" type="TextureRect" parent="."]
 z_index = -10
@@ -37,5 +37,4 @@ text = "End Turn"
 [node name="BattleManager" type="Node" parent="."]
 script = ExtResource("5_dxjtj")
 
-[node name="InputManager" type="Node" parent="."]
-script = ExtResource("6_dun80")
+[node name="DragCanvasLayer" type="CanvasLayer" parent="."]

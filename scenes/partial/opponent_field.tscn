@@ -88,6 +88,8 @@ card_slot_type = "Magic"
 [node name="OpponentHand" type="Node2D" parent="."]
 script = ExtResource("4_l6eun")
 is_player = false
+hand_y_position = -30.0
+is_reversed = true
 
 [node name="OpponentDeck" type="Node2D" parent="."]
 position = Vector2(1780, 125)

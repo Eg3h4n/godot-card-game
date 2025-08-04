@@ -29,31 +29,19 @@ func _populate_test_decks():
 	# Fill deck with test cards
 	for i in range(3):
 		test_deck_player.append(CardDatabase.get_card_data("Knight"))
-		test_deck_player.append(CardDatabase.get_card_data("Knight"))
-		test_deck_player.append(CardDatabase.get_card_data("Archer"))
 		test_deck_player.append(CardDatabase.get_card_data("Archer"))
 		test_deck_player.append(CardDatabase.get_card_data("Tornado"))
-		test_deck_player.append(CardDatabase.get_card_data("Tornado"))
+		test_deck_player.append(CardDatabase.get_card_data("Demon"))
 		
 	for i in range(3):
 		test_deck_ai.append(CardDatabase.get_card_data("Demon", false))
-		test_deck_ai.append(CardDatabase.get_card_data("Demon", false))
-		test_deck_ai.append(CardDatabase.get_card_data("Archer", false))
 		test_deck_ai.append(CardDatabase.get_card_data("Archer", false))
 		test_deck_ai.append(CardDatabase.get_card_data("Tornado", false))
-		test_deck_ai.append(CardDatabase.get_card_data("Tornado", false))
+		test_deck_ai.append(CardDatabase.get_card_data("Knight", false))
 		
 	# Store decks in GameManager
-	GameManager.players["Player"] = {
-		"health": 20,
-		"deck": test_deck_player,
-		"hand": []
-	}
-	GameManager.players["AI"] = {
-		"health": 20,
-		"deck": test_deck_ai,
-		"hand": []
-	}
+	GameManager.register_player("Player", 20, test_deck_player)
+	GameManager.register_player("AI", 20, test_deck_ai)
 
 func _on_game_started() -> void:
 	print("GameSetup: Match setup completed")

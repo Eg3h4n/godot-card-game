@@ -20,6 +20,7 @@ config/icon="res://assets/icon.svg"
 CardDatabase="*res://scripts/autoload/card_database.gd"
 NetworkManager="*res://scripts/autoload/network_manager.gd"
 GameManager="*res://scripts/autoload/game_manager.gd"
+InputManager="*res://scripts/autoload/input_manager.gd"
 
 [display]
 

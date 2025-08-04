@@ -1,16 +1,28 @@
 extends Node2D
 
+# -----------------------------
+# Signals
+# -----------------------------
+signal request_end_turn
+
 @export var player_field : Node2D
 @export var opponent_field : Node2D
 @export var end_turn_button: Button
+@export var drag_canvas_layer: CanvasLayer
 
 func _ready():
 	print("Board: Initializing...")
 	
 	# Connect to GameManager signals
-	GameManager.turn_changed.connect(_on_turn_changed)
+	GameManager.hand_updated.connect(_on_hand_updated)
+	GameManager.card_played.connect(_on_card_played)
 	GameManager.player_health_changed.connect(_on_player_health_changed)
-	
+	GameManager.turn_changed.connect(_on_turn_changed)
+	InputManager.set_drag_layer(drag_canvas_layer)
+	 # Connect button signal to emit request only
+	if end_turn_button:
+		end_turn_button.pressed.connect(_on_end_turn_pressed)
+
 	# Assign Player field
 	if player_field:
 		player_field.player_id = _get_local_player_id()
@@ -21,16 +33,14 @@ func _ready():
 	if opponent_field:
 		opponent_field.player_id = _get_opponent_id()
 		opponent_field.is_local_player = false
-		#opponent_field.flip_layout()  # Mirror opponent field layout
 		print("Board: Opponent field set for", opponent_field.player_id)
-	# Set up End Turn button
-	if end_turn_button:
-		end_turn_button.pressed.connect(_on_end_turn_pressed)
-		
-	# Start first turn automatically
-	if GameManager.players.size() > 0:
-		var first_player = GameManager.players.keys()[0]
-		GameManager.turn_changed.emit(first_player)
+	
+	# ✅ Start first turn and auto-draw only when Board is ready
+	GameManager.start_first_turn()
+	## Start first turn automatically
+	#if GameManager.players.size() > 0:
+		#var first_player = GameManager.players.keys()[0]
+		#GameManager.turn_changed.emit(first_player)
 		
 
 # -----------------------------
@@ -54,7 +64,7 @@ func _get_opponent_id():
 
 func _on_end_turn_pressed():
 	print("Board: End turn pressed")
-	GameManager.next_turn()
+	emit_signal("request_end_turn")
 
 func _on_turn_changed(current_player_id):
 	print("Board: Turn changed ->", current_player_id)
@@ -64,20 +74,27 @@ func _on_turn_changed(current_player_id):
 	if end_turn_button:
 		end_turn_button.disabled = not is_local_turn
 		
-	# If it's AI's turn, start AI action
-	if GameManager.mode == GameManager.GameMode.SINGLE_PLAYER and current_player_id == "AI":
-		_start_ai_turn()
 		
 func _on_player_health_changed(player_id, new_health):
-	# Optional: extra reactions like animations or effects
-	pass
-
-# --- BASIC AI TURN (placeholder) ---
-
-func _start_ai_turn():
-	print("Board: AI thinking...")
-	# Delay AI turn for realism
-	await get_tree().create_timer(1.5).timeout
-	# AI action: just ends turn for now
-	print("Board: AI ends turn")
-	GameManager.next_turn()
+	print("Board: Health updated ->", player_id, "=", new_health)
+	# TODO: Update health bar in UI
+	
+func _on_hand_updated(player_id, new_hand):
+	print("Board: Hand updated for", player_id, "- Cards:", new_hand.size())
+	# TODO: Update hand UI for the appropriate player
+	if player_id == _get_local_player_id():
+		if player_field and "update_hand_ui" in player_field:
+			player_field.update_hand_ui(new_hand)
+	else:
+		if opponent_field and "update_hand_ui" in opponent_field:
+			opponent_field.update_hand_ui(new_hand)
+			
+func _on_card_played(player_id, card_data, target_id):
+	print("Board: Card played by", player_id, "-", card_data.name)
+	# TODO: Animate card move, show effects on target
+	if player_id == _get_local_player_id():
+		if player_field and "animate_card_play" in player_field:
+			player_field.animate_card_play(card_data, target_id)
+	else:
+		if opponent_field and "animate_card_play" in opponent_field:
+			opponent_field.animate_card_play(card_data, target_id)
