@@ -23,7 +23,7 @@ signal hover_exited(card_node)
 # ------------------------------------------------------------
 var card_data: Dictionary = {
 	"name": "",
-	"sprite": "",
+	"sprite_path": "",
 	"attack": 0,
 	"health": 0,
 	"ability_script": "",
@@ -76,7 +76,7 @@ func _update_visuals():
 	if label_ability_text:
 		label_ability_text.text = str(card_data.get("ability_text", ""))
 
-	var sprite_path = card_data.get("sprite", "")
+	var sprite_path = card_data.get("sprite_path", "")
 	if sprite_path != "":
 		var tex = load(sprite_path)
 		if tex:

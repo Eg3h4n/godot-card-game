@@ -59,7 +59,7 @@ func register_card(card_node: Node):
 # ------------------------------------------------------------
 func _process(delta):
 	if _dragging_card:
-		print("Dragging:", _dragging_card.name, "MousePos:", get_viewport().get_mouse_position())
+		#print("Dragging:", _dragging_card.name, "MousePos:", get_viewport().get_mouse_position())
 		_dragging_card.global_position = get_viewport().get_mouse_position()
 	
 # ------------------------------------------------------------
@@ -92,7 +92,7 @@ func _on_card_picked(card_node):
 func _on_card_dropped(card_node):
 	if not _dragging_card:
 		return
-	
+	print("InputManager: _on_card_dropped ->", card_node)
 	var target_slot = _get_slot_under_mouse()
 	var card_data = card_node.get_card_data() if card_node.has_method("get_card_data") else card_node.card_data
 

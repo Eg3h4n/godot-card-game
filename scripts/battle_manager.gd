@@ -28,7 +28,7 @@ func _on_turn_changed(player_id):
 	print("BattleManager: Turn started for", player_id)
 	
 	# Restart turn timer
-	_timer.start(turn_duration)
+	#_timer.start(turn_duration)
 
 func _on_turn_timeout():
 	print("BattleManager: Turn timeout for", _current_turn_player)
