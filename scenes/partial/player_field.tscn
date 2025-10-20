@@ -31,60 +31,70 @@ hand_container = NodePath("../PlayerHand")
 [node name="PlayerCardSlots" type="Node2D" parent="."]
 position = Vector2(960, 660)
 
-[node name="CardSlot" parent="PlayerCardSlots" instance=ExtResource("3_5hyay")]
+[node name="CardSlot" parent="PlayerCardSlots" groups=["card_slots"] instance=ExtResource("3_5hyay")]
 z_index = -3
 position = Vector2(-280, 90)
 scale = Vector2(0.6, 0.6)
 card_slot_type = "Magic"
+card_slot_id = 1
 
-[node name="CardSlot2" parent="PlayerCardSlots" instance=ExtResource("3_5hyay")]
+[node name="CardSlot2" parent="PlayerCardSlots" groups=["card_slots"] instance=ExtResource("3_5hyay")]
 z_index = -3
 position = Vector2(-140, 90)
 scale = Vector2(0.6, 0.6)
 card_slot_type = "Magic"
+card_slot_id = 2
 
-[node name="CardSlot3" parent="PlayerCardSlots" instance=ExtResource("3_5hyay")]
+[node name="CardSlot3" parent="PlayerCardSlots" groups=["card_slots"] instance=ExtResource("3_5hyay")]
 z_index = -3
 position = Vector2(0, 90)
 scale = Vector2(0.6, 0.6)
 card_slot_type = "Magic"
+card_slot_id = 3
 
-[node name="CardSlot4" parent="PlayerCardSlots" instance=ExtResource("3_5hyay")]
+[node name="CardSlot4" parent="PlayerCardSlots" groups=["card_slots"] instance=ExtResource("3_5hyay")]
 z_index = -3
 position = Vector2(140, 90)
 scale = Vector2(0.6, 0.6)
 card_slot_type = "Magic"
+card_slot_id = 4
 
-[node name="CardSlot5" parent="PlayerCardSlots" instance=ExtResource("3_5hyay")]
+[node name="CardSlot5" parent="PlayerCardSlots" groups=["card_slots"] instance=ExtResource("3_5hyay")]
 z_index = -3
 position = Vector2(280, 90)
 scale = Vector2(0.6, 0.6)
 card_slot_type = "Magic"
+card_slot_id = 5
 
-[node name="CardSlot6" parent="PlayerCardSlots" instance=ExtResource("3_5hyay")]
+[node name="CardSlot6" parent="PlayerCardSlots" groups=["card_slots"] instance=ExtResource("3_5hyay")]
 z_index = -3
 position = Vector2(-280, -90)
 scale = Vector2(0.6, 0.6)
+card_slot_id = 6
 
-[node name="CardSlot7" parent="PlayerCardSlots" instance=ExtResource("3_5hyay")]
+[node name="CardSlot7" parent="PlayerCardSlots" groups=["card_slots"] instance=ExtResource("3_5hyay")]
 z_index = -3
 position = Vector2(-140, -90)
 scale = Vector2(0.6, 0.6)
+card_slot_id = 7
 
-[node name="CardSlot8" parent="PlayerCardSlots" instance=ExtResource("3_5hyay")]
+[node name="CardSlot8" parent="PlayerCardSlots" groups=["card_slots"] instance=ExtResource("3_5hyay")]
 z_index = -3
 position = Vector2(0, -90)
 scale = Vector2(0.6, 0.6)
+card_slot_id = 8
 
-[node name="CardSlot9" parent="PlayerCardSlots" instance=ExtResource("3_5hyay")]
+[node name="CardSlot9" parent="PlayerCardSlots" groups=["card_slots"] instance=ExtResource("3_5hyay")]
 z_index = -3
 position = Vector2(140, -90)
 scale = Vector2(0.6, 0.6)
+card_slot_id = 9
 
-[node name="CardSlot10" parent="PlayerCardSlots" instance=ExtResource("3_5hyay")]
+[node name="CardSlot10" parent="PlayerCardSlots" groups=["card_slots"] instance=ExtResource("3_5hyay")]
 z_index = -3
 position = Vector2(280, -90)
 scale = Vector2(0.6, 0.6)
+card_slot_id = 10
 
 [node name="PlayerHand" type="Node2D" parent="."]
 script = ExtResource("5_huyxb")

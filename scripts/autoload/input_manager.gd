@@ -10,7 +10,7 @@ signal card_play_attempt(player_id, card_data, target_id)
 # ------------------------------------------------------------
 # Dragging State
 # ------------------------------------------------------------
-var _dragging_card: Node = null
+var _dragging_card: Card = null
 var _drag_start_pos: Vector2
 var _drag_start_index: int = -1
 var _dragging_original_parent: Node
@@ -20,6 +20,7 @@ var local_player_id: Variant
 
 # Optional drag layer (set via inspector or scene path)
 var _drag_layer: Node = null
+var current_target_card_slot: CardSlot = null
 
 # ------------------------------------------------------------
 # Autoload Initialization
@@ -33,9 +34,19 @@ func _ready():
 		GameManager.turn_changed.connect(_on_turn_changed)
 	else:
 		print("InputManager: Waiting for GameManager...")
-
+		
+	
+		
 	print("InputManager: Autoload initialized for local player:", local_player_id)
 	set_process(true)
+
+func _on_update_current_target_card_slot(card_slot):
+	if current_target_card_slot == card_slot:
+		current_target_card_slot = null
+		print("InputManager: target slot cleared:")
+	else:
+		current_target_card_slot = card_slot
+		print("InputManager: target slot set as: ", card_slot.card_slot_id)
 
 # ------------------------------------------------------------
 # Called by board scenes on load
@@ -43,6 +54,10 @@ func _ready():
 func set_drag_layer(layer_node: Node):
 	_drag_layer = layer_node
 	print("InputManager: Drag layer set to", layer_node)
+	
+	var slots = get_tree().get_nodes_in_group("card_slots")
+	for slot in slots:
+		slot.update_target_card_slot.connect(_on_update_current_target_card_slot)
 
 # ------------------------------------------------------------
 # Register card signals dynamically
@@ -93,7 +108,7 @@ func _on_card_dropped(card_node):
 	if not _dragging_card:
 		return
 	print("InputManager: _on_card_dropped ->", card_node)
-	var target_slot = _get_slot_under_mouse()
+	var target_slot = current_target_card_slot
 	var card_data = card_node.get_card_data() if card_node.has_method("get_card_data") else card_node.card_data
 
 	if target_slot and target_slot.has_method("can_accept_card") and target_slot.can_accept_card(card_data):
@@ -137,15 +152,15 @@ func _get_slot_under_mouse() -> Node:
 # Notify BattleManager
 # -----------------------------
 func _play_card(card_node: Node, target_slot: Node):
-	var player_id = "Player" if GameManager.mode == GameManager.GameMode.SINGLE_PLAYER else multiplayer.get_unique_id()
-	var card_data = card_node.card_data if card_node.has_variable("card_data") else card_node.get("card_data")
-	var target_id = target_slot.get_meta("owner_id") if target_slot.has_meta("owner_id") else null
+	var player_id = "Player" if GameManager.mode == GameManager.GameMode.SINGLE_PLAYER else str(multiplayer.get_unique_id())
+	var card_data = card_node.card_data if card_node.has_meta("card_data") else card_node.get("card_data")
+	var target_id = target_slot.get("owner_id") if target_slot.has_meta("owner_id") else ""
 	
-	emit_signal("card_play_attempt", player_id, card_data, target_id)
+	card_play_attempt.emit(player_id, card_data, target_id)
 	
 	var bm = get_tree().current_scene.get_node_or_null("BattleManager")
 	if bm:
-		bm.play_card(player_id, card_data, target_id)
+		bm.play_card_request(player_id, card_data, target_id)
 		
 # ------------------------------------------------------------
 # Turn-locking behavior

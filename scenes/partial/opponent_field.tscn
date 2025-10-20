@@ -30,56 +30,56 @@ hand_container = NodePath("../OpponentHand")
 [node name="OpponentCardSlots" type="Node2D" parent="."]
 position = Vector2(960, 280)
 
-[node name="CardSlot" parent="OpponentCardSlots" instance=ExtResource("1_n6p83")]
+[node name="CardSlot" parent="OpponentCardSlots" groups=["card_slots"] instance=ExtResource("1_n6p83")]
 position = Vector2(-280, 90)
 scale = Vector2(0.6, 0.6)
 script = ExtResource("2_wy1vv")
 
-[node name="CardSlot2" parent="OpponentCardSlots" instance=ExtResource("1_n6p83")]
+[node name="CardSlot2" parent="OpponentCardSlots" groups=["card_slots"] instance=ExtResource("1_n6p83")]
 position = Vector2(-140, 90)
 scale = Vector2(0.6, 0.6)
 script = ExtResource("2_wy1vv")
 
-[node name="CardSlot3" parent="OpponentCardSlots" instance=ExtResource("1_n6p83")]
+[node name="CardSlot3" parent="OpponentCardSlots" groups=["card_slots"] instance=ExtResource("1_n6p83")]
 position = Vector2(0, 90)
 scale = Vector2(0.6, 0.6)
 script = ExtResource("2_wy1vv")
 
-[node name="CardSlot4" parent="OpponentCardSlots" instance=ExtResource("1_n6p83")]
+[node name="CardSlot4" parent="OpponentCardSlots" groups=["card_slots"] instance=ExtResource("1_n6p83")]
 position = Vector2(140, 90)
 scale = Vector2(0.6, 0.6)
 script = ExtResource("2_wy1vv")
 
-[node name="CardSlot5" parent="OpponentCardSlots" instance=ExtResource("1_n6p83")]
+[node name="CardSlot5" parent="OpponentCardSlots" groups=["card_slots"] instance=ExtResource("1_n6p83")]
 position = Vector2(280, 90)
 scale = Vector2(0.6, 0.6)
 script = ExtResource("2_wy1vv")
 
-[node name="CardSlot6" parent="OpponentCardSlots" instance=ExtResource("1_n6p83")]
+[node name="CardSlot6" parent="OpponentCardSlots" groups=["card_slots"] instance=ExtResource("1_n6p83")]
 position = Vector2(-280, -90)
 scale = Vector2(0.6, 0.6)
 script = ExtResource("2_wy1vv")
 card_slot_type = "Magic"
 
-[node name="CardSlot7" parent="OpponentCardSlots" instance=ExtResource("1_n6p83")]
+[node name="CardSlot7" parent="OpponentCardSlots" groups=["card_slots"] instance=ExtResource("1_n6p83")]
 position = Vector2(-140, -90)
 scale = Vector2(0.6, 0.6)
 script = ExtResource("2_wy1vv")
 card_slot_type = "Magic"
 
-[node name="CardSlot8" parent="OpponentCardSlots" instance=ExtResource("1_n6p83")]
+[node name="CardSlot8" parent="OpponentCardSlots" groups=["card_slots"] instance=ExtResource("1_n6p83")]
 position = Vector2(0, -90)
 scale = Vector2(0.6, 0.6)
 script = ExtResource("2_wy1vv")
 card_slot_type = "Magic"
 
-[node name="CardSlot9" parent="OpponentCardSlots" instance=ExtResource("1_n6p83")]
+[node name="CardSlot9" parent="OpponentCardSlots" groups=["card_slots"] instance=ExtResource("1_n6p83")]
 position = Vector2(140, -90)
 scale = Vector2(0.6, 0.6)
 script = ExtResource("2_wy1vv")
 card_slot_type = "Magic"
 
-[node name="CardSlot10" parent="OpponentCardSlots" instance=ExtResource("1_n6p83")]
+[node name="CardSlot10" parent="OpponentCardSlots" groups=["card_slots"] instance=ExtResource("1_n6p83")]
 position = Vector2(280, -90)
 scale = Vector2(0.6, 0.6)
 script = ExtResource("2_wy1vv")

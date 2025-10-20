@@ -27,6 +27,10 @@ InputManager="*res://scripts/autoload/input_manager.gd"
 window/size/viewport_width=1920
 window/size/viewport_height=1080
 
+[global_group]
+
+card_slots=""
+
 [layer_names]
 
 2d_physics/layer_1="Cards"

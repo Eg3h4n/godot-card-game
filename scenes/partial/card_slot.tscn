@@ -6,16 +6,19 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1bvp3"]
 size = Vector2(175, 261)
 
-[node name="CardSlot" type="Node2D"]
+[node name="CardSlot" type="Node2D" node_paths=PackedStringArray("card_slot_image")]
 script = ExtResource("1_jmuc5")
+card_slot_image = NodePath("CardSlotImage")
 
 [node name="CardSlotImage" type="Sprite2D" parent="."]
 texture = ExtResource("1_qx3y6")
 
 [node name="Area2D" type="Area2D" parent="."]
 collision_layer = 2
-collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 position = Vector2(-0.5, -0.5)
 shape = SubResource("RectangleShape2D_1bvp3")
+
+[connection signal="mouse_entered" from="Area2D" to="." method="_on_area_2d_mouse_entered"]
+[connection signal="mouse_exited" from="Area2D" to="." method="_on_area_2d_mouse_exited"]

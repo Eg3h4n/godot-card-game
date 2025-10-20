@@ -66,6 +66,7 @@ func _on_hand_updated(id, new_hand):
 func _update_deck_count(playerid, count: int):
 	if deck_count_label:
 		deck_count_label.text = str(count)
+		
 
 # ------------------------------------------------------------
 # Card Drawing (Triggered by external systems like Board/BattleManager)

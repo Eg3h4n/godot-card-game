@@ -16,9 +16,13 @@ extends Node2D
 
 @export var card_slot_type: String = "Monster" # "Monster" or "Magic"
 @export var owner_id: String = ""             # Player or AI ID
+@export var card_slot_image: Sprite2D
+@export var card_slot_id: int = 0
 
 var card_in_slot: bool = false
 var collider: CollisionShape2D
+
+signal update_target_card_slot(card_slot)
 
 func _ready() -> void:
 	if owner_id == "Player":
@@ -50,7 +54,8 @@ func can_accept_card(card_data: Dictionary) -> bool:
 # ------------------------------------------------------------
 func place_card(card_node: Node):
 	card_in_slot = true
-	add_child(card_node)
+	card_node.reparent(self, true)
+	#add_child(card_node)
 	card_node.position = Vector2.ZERO
 	print("Card placed in", card_slot_type, "slot owned by", owner_id)
 
@@ -66,3 +71,38 @@ func clear_slot():
 func activate_card_slot_collision():
 	if collider:
 		collider.disabled = false
+
+func _set_highlight(state: bool):
+		card_slot_image.modulate = Color(1, 1, 0.8, 1) if state else Color(1, 1, 1, 1)
+
+#func _on_area_2d_area_entered(area: Area2D) -> void:
+	#if owner_id != "Player":
+		#return
+	#print("DEBUG: Card slot area entered:", card_slot_id)
+	#emit_signal("update_target_card_slot", self)
+	#_set_highlight(true)
+#
+#
+#func _on_area_2d_area_exited(area: Area2D) -> void:
+	#if owner_id != "Player":
+		#return
+	#print("DEBUG: Card slot area exited:", card_slot_id)
+	#emit_signal("update_target_card_slot", self)
+	#_set_highlight(false)
+
+
+func _on_area_2d_mouse_entered() -> void:
+	if owner_id != "Player":
+		return
+	print("DEBUG: Card slot area entered:", card_slot_id)
+	update_target_card_slot.emit(self)
+	_set_highlight(true)
+
+
+
+func _on_area_2d_mouse_exited() -> void:
+	if owner_id != "Player":
+		return
+	print("DEBUG: Card slot area exited:", card_slot_id)
+	update_target_card_slot.emit(self)
+	_set_highlight(false)

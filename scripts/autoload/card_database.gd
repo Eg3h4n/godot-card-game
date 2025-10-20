@@ -7,7 +7,7 @@ const CARDS = { # [attack, health, sprite, card type, ability text, ability scri
 	"Tornado": [0, 0, "res://assets/Tornado.png", "Magic", "Deal 1 damage to all opponent cards", "res://scripts/abilities/tornado.gd"]
 }
 
-static func get_card_data(name: String, is_player: bool = true) -> Dictionary:
+func get_card_data(name: String, is_player: bool = true) -> Dictionary:
 	var c = CARDS[name]
 	return {
 		"name": name,
